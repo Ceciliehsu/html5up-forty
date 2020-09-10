@@ -14,13 +14,35 @@
         <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
 <script type="text/javascript">
+var company = [];
+  for(var j =0;j<30;j++){
+    company[j] = [];
+  }
+  var i=0,j=0;
+  getdata();
+async function getdata(){
+  const response = await fetch('train_2019_06(2019 Q1).csv');
+  const data = await response.text();
+  console.log(data);
+  const rows = data.split('\n');
+  rows.forEach(elt => {
+    const row = elt.split(',');
+    console.log(row);
+    for(var j=0; j<30; j++){
+      company[j][i]=row[j];
+      if(i > 0)
+        company[j][i] = parseFloat(company[j][i]);
+    }
+    i++;
+  })
+}
 function dooutput(myObj){
   var dataPoints = [];
   window.onclick = function () {
   var stockChart = new CanvasJS.StockChart("stockChartContainer", {
     exportEnabled: true,
     title: {
-      text:myObj.id + "歷史股價"
+      text:myObj.value + "歷史股價"
     },
     charts: [{
       axisX: {
@@ -31,13 +53,12 @@ function dooutput(myObj){
         }
       },
       axisY: {
-        title: "Million of Dollars",
+        title: "Dollars",
         prefix: "$",
-        suffix: "M",
         crosshair: {
           enabled: true,
           snapToDataPoint: true,
-          valueFormatString: "$#,###.00M",
+          valueFormatString: "$#,###.00",
         }
       },
       data: [{
@@ -54,36 +75,17 @@ function dooutput(myObj){
       }
     }
   });
-  $.getJSON("https://canvasjs.com/data/gallery/stock-chart/grocery-sales.json", function(data) {
-    for(var i = 0; i < data.length; i++){
-      dataPoints.push({x: new Date(data[i].date), y: Number(data[i].sale)});
+
+    for(var i = 0; i < company.length; i++){
+      if(parseInt(myObj.id) == i){
+        for(var j = 0;j < company[0].length;j++)
+          dataPoints.push({x: j,y:company[i][j]});
+      }
+      
     }
     stockChart.render();
-  });
+  ;
 }}
-</script>
-<script>
-  var company = [];
-  for(var j =0;j<30;j++){
-    company[j] = [];
-  }
-  var i=0;
-getdata();
-async function getdata(){
-  const response = await fetch('train_2019_06(2019 Q1).csv');
-  const data = await response.text();
-  console.log(data);
-  const rows = data.split('\n');
-  rows.forEach(elt => {
-    const row = elt.split(',');
-    console.log(row);
-    for(var j=0; j<30; j++)
-    company[j][i]=row[j];
-    i++;
-  })
-  
-}
-
 </script>
     </head>
 	<body class="is-preload" style="background-color:rgb(47,70,110) ">
@@ -154,7 +156,7 @@ async function getdata(){
                          </thead>
                          <tbody>
                            <tr>
-                             <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="AAPL" name="mybutton" value="AAPL" onclick="dooutput(this)"></td>
+                             <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="AAPL" onclick="dooutput(this)"></td>
                              <td headers="fruit_price">164.35</td>
                              <td headers="fruit_inventory">164.39</td>
                              <td headers="fruit_price">161.64</td>
@@ -162,7 +164,7 @@ async function getdata(){
                              <td headers="fruit_inventory">1.14M</td>
                            </tr>
                            <tr>
-                             <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="AXP" name="mybutton" value="AXP" onclick="dooutput(this)"></td>
+                             <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="1" name="mybutton" value="AXP" onclick="dooutput(this)"></td>
                              <td headers="fruit_price">132.21</td>
                              <td headers="fruit_inventory">132.90</td>
                              <td headers="fruit_price">130.53</td>
@@ -170,7 +172,7 @@ async function getdata(){
                              <td headers="fruit_inventory">71.37M</td>
                            </tr>
                            <tr>
-                             <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="BA" name="mybutton" value="BA" onclick="dooutput(this)"></td>
+                             <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="2" name="mybutton" value="BA" onclick="dooutput(this)"></td>
                              <td headers="fruit_price">41.92</td>
                              <td headers="fruit_inventory">42.03</td>
                              <td headers="fruit_price">41.50</td>
@@ -178,7 +180,7 @@ async function getdata(){
                              <td headers="fruit_inventory">9.18M</td>
                            </tr>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="CAT" name="mybutton" value="CAT" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="3" name="mybutton" value="CAT" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -186,7 +188,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="CSCO" name="mybutton" value="CSCO" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="4" name="mybutton" value="CSCO" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -194,7 +196,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="CVX" name="mybutton" value="CVX" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="5" name="mybutton" value="CVX" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -202,7 +204,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="DIS" name="mybutton" value="DIS" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="6" name="mybutton" value="DIS" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -210,7 +212,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="DD" name="mybutton" value="DD" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="7" name="mybutton" value="DD" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -218,7 +220,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="GS "name="mybutton" value="GS" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="8 "name="mybutton" value="GS" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -226,7 +228,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="HD" name="mybutton" value="HD" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="9" name="mybutton" value="HD" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -234,7 +236,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="IBM" name="mybutton" value="IBM" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="10" name="mybutton" value="IBM" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -242,7 +244,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="INTC" name="mybutton" value="INTC" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="11" name="mybutton" value="INTC" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -250,7 +252,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="JNJ" name="mybutton" value="JNJ" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="12" name="mybutton" value="JNJ" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -258,7 +260,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="KO" name="mybutton" value="KO" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="13" name="mybutton" value="KO" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -266,7 +268,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="MCD" name="mybutton" value="MCD" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="14" name="mybutton" value="MCD" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -274,7 +276,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="MMM" name="mybutton" value="MMM" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="15" name="mybutton" value="MMM" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -282,7 +284,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="MRK" name="mybutton" value="MRK" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="16" name="mybutton" value="MRK" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -290,7 +292,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="MSFT" name="mybutton" value="MSFT" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="17" name="mybutton" value="MSFT" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -298,7 +300,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="NKE" name="mybutton" value="NKE" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="18" name="mybutton" value="NKE" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -306,7 +308,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="PFE" name="mybutton" value="PFE" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="19" name="mybutton" value="PFE" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -314,7 +316,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="PG" name="mybutton" value="PG" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="20" name="mybutton" value="PG" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -322,7 +324,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="TRV" name="mybutton" value="TRV" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="21" name="mybutton" value="TRV" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -330,7 +332,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="UNH" name="mybutton" value="UNH" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="22" name="mybutton" value="UNH" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -338,7 +340,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="UTX" name="mybutton" value="UTX" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="23" name="mybutton" value="UTX" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -346,7 +348,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="V" name="mybutton" value="V" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="24" name="mybutton" value="V" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -354,7 +356,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="VZ" name="mybutton" value="VZ" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="25" name="mybutton" value="VZ" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -362,7 +364,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="BA" name="mybutton" value="BA" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="26" name="mybutton" value="BA" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
@@ -370,7 +372,7 @@ async function getdata(){
                             <td headers="fruit_inventory">9.18M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="WBA" name="mybutton" value="WBA" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="27" name="mybutton" value="WBA" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">164.35</td>
                             <td headers="fruit_inventory">164.39</td>
                             <td headers="fruit_price">161.64</td>
@@ -378,7 +380,7 @@ async function getdata(){
                             <td headers="fruit_inventory">1.14M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="WMT" name="mybutton" value="WMT" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="28" name="mybutton" value="WMT" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">132.21</td>
                             <td headers="fruit_inventory">132.90</td>
                             <td headers="fruit_price">130.53</td>
@@ -386,7 +388,7 @@ async function getdata(){
                             <td headers="fruit_inventory">71.37M</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="XOM" name="mybutton" value="XOM" onclick="dooutput(this)"></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="29" name="mybutton" value="XOM" onclick="dooutput(this)"></td>
                             <td headers="fruit_price">41.92</td>
                             <td headers="fruit_inventory">42.03</td>
                             <td headers="fruit_price">41.50</td>
