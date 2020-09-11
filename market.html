@@ -19,9 +19,11 @@ var company = [];
     company[j] = [];
   }
   var i=0,j=0;
+  var year = 2018;
+var filename = "Y2Y/train_"+year+"("+year+" Q1).csv";
   getdata();
 async function getdata(){
-  const response = await fetch('train_2019_06(2019 Q1).csv');
+  const response = await fetch(filename);
   const data = await response.text();
   console.log(data);
   const rows = data.split('\n');
@@ -38,15 +40,24 @@ async function getdata(){
 }
 function dooutput(myObj){
   var dataPoints = [];
-  window.onclick = function () {
+    var y = 0;
+  var data = []; var dataSeries = { type: "spline" };
+  var dataPoints = [];
+  var tmp = parseInt(myObj.id);
+        for(var j = 0;j < company[0].length;j++)
+          dataPoints.push({x: j,y:company[tmp][j]});
+  dataSeries.dataPoints = dataPoints;
+  data.push(dataSeries);
   var stockChart = new CanvasJS.StockChart("stockChartContainer", {
     exportEnabled: true,
+    animationEnabled: true,
+     // exportEnabled: true,
     title: {
       text:myObj.value + "歷史股價"
     },
     charts: [{
-      axisX: {
-        crosshair: {
+      axisX: {  
+        crosshair: { 
           enabled: true,
           snapToDataPoint: true,
           valueFormatString: "MMM YYYY"
@@ -68,24 +79,28 @@ function dooutput(myObj){
         dataPoints : dataPoints
       }]
     }],
-    navigator: {
-      slider: {
-        minimum: new Date(2010, 00, 01),
-        maximum: new Date(2018, 00, 01)
+    data:data,
+    rangeSelector: {
+        inputFields: {
+          startValue: 1,
+          endValue: 20,
+          valueFormatString: "###0"
+        },
+        
+        buttons: [{
+          label: "All",        
+          rangeType: "all"
+        }]
       }
-    }
   });
 
-    for(var i = 0; i < company.length; i++){
-      if(parseInt(myObj.id) == i){
-        for(var j = 0;j < company[0].length;j++)
-          dataPoints.push({x: j,y:company[i][j]});
-      }
+    
+
       
-    }
+    
     stockChart.render();
   ;
-}}
+}
 </script>
     </head>
 	<body class="is-preload" style="background-color:rgb(47,70,110) ">
