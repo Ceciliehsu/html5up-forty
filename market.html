@@ -13,98 +13,9 @@
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
         <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
-<script type="text/javascript">
-var company = [];
-  for(var j =0;j<30;j++){
-    company[j] = [];
-  }
-  var i=0,j=0;
-  var year = 2018;
-var filename = "Y2Y/train_"+year+"("+year+" Q1).csv";
-  getdata();
-async function getdata(){
-  const response = await fetch(filename);
-  const data = await response.text();
-  console.log(data);
-  const rows = data.split('\n');
-  rows.forEach(elt => {
-    const row = elt.split(',');
-    console.log(row);
-    for(var j=0; j<30; j++){
-      company[j][i]=row[j];
-      if(i > 0)
-        company[j][i] = parseFloat(company[j][i]);
-    }
-    i++;
-  })
-}
-function dooutput(myObj){
-  var dataPoints = [];
-    var y = 0;
-  var data = []; var dataSeries = { type: "spline" };
-  var dataPoints = [];
-  var tmp = parseInt(myObj.id);
-        for(var j = 0;j < company[0].length;j++)
-          dataPoints.push({x: j,y:company[tmp][j]});
-  dataSeries.dataPoints = dataPoints;
-  data.push(dataSeries);
-  var stockChart = new CanvasJS.StockChart("stockChartContainer", {
-    exportEnabled: true,
-    animationEnabled: true,
-     // exportEnabled: true,
-    title: {
-      text:myObj.value + "歷史股價"
-    },
-    charts: [{
-      axisX: {  
-        crosshair: { 
-          enabled: true,
-          snapToDataPoint: true,
-          valueFormatString: "MMM YYYY"
-        }
-      },
-      axisY: {
-        title: "Dollars",
-        prefix: "$",
-        crosshair: {
-          enabled: true,
-          snapToDataPoint: true,
-          valueFormatString: "$#,###.00",
-        }
-      },
-      data: [{
-        type: "line",
-        xValueFormatString: "MMM YYYY",
-        yValueFormatString: "$#,###.##M",
-        dataPoints : dataPoints
-      }]
-    }],
-    data:data,
-    rangeSelector: {
-        inputFields: {
-          startValue: 1,
-          endValue: 20,
-          valueFormatString: "###0"
-        },
-        
-        buttons: [{
-          label: "All",        
-          rangeType: "all"
-        }]
-      }
-  });
-
-    
-
-      
-    
-    stockChart.render();
-  ;
-}
-</script>
     </head>
 	<body class="is-preload" style="background-color:rgb(47,70,110) ">
-
+    
 		<!-- Wrapper -->
 			<div id="wrapper">
 
@@ -139,7 +50,7 @@ function dooutput(myObj){
 								<h1>MARKET</h1>
 							</header>
 							<div class="content">
-								<p>股金中外，首選國泰</p>
+								<p>股金中外，值得信賴</p>
 								<ul class="actions">
 									<li><a href="#one" class="button next scrolly">Get Started</a></li>
 								</ul>
@@ -151,7 +62,8 @@ function dooutput(myObj){
                 <div >
                     <!-- 股價圖-->
                     <center><h2 >歷史股價</h2></center>
-                    <center><div id="stockChartContainer" style="height: 400px; width: 70%;"></div></center>
+                    <center><input type="month" id="inputm" value="2019-06" min="2009-12" max="2019-11" style = "height: 46px; width: 120px; background-color:rgb(47,70,110);"><button type="button" onclick="getcsv()">選取月份</button></center>
+                    <center><div id="stockChartContainer" style="height: 400px; width: 80%;"></div></center>
                     <!-- 股價表-->
                     <center><table id="fruit_table" style="height: 150px; width: 70%;">     
                          <colgroup>
@@ -423,6 +335,104 @@ function dooutput(myObj){
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+      <script type="text/javascript">
+         var company = [];
+          for(var j =0;j<30;j++){
+            company[j] = [];
+          }
+          var year;
+          var month;
+          function getcsv(myObj){
+          var input = document.getElementById("inputm");
+          var ym = input.value;
+          console.log(ym.split('-'));
+          var tempm = ym.split('-');
+          year = tempm[0];
+          month = tempm[1]; 
+          var filename = "M2M/train_"+year+"_"+month+"("+year+" Q1).csv";
+          getdata(filename,company);
+        }
+        async function getdata(filename,company){
+          var i=0;
+          const response = await fetch(filename);
+          const data = await response.text();
+          console.log(data);
+          const rows = data.split('\n');
+          rows.forEach(elt => {
+            const row = elt.split(',');
+            console.log(row);
+            for(var j=0; j<30; j++){
+              company[j][i]=row[j];
+              if(i > 0)
+                company[j][i] = parseFloat(company[j][i]);
+            }
+            i++;
+          })
+        }
+        function dooutput(myObj){
+        var dataPoints = [];
+        var y = 0;
+        var data = []; var dataSeries = { type: "spline" };
+        var dataPoints = [];
+        var tmp = parseInt(myObj.id);
+        for(var j = 0;j < company[0].length-1;j++)
+            dataPoints.push({x: j,y:company[tmp][j]});
+        dataSeries.dataPoints = dataPoints;
+        data.push(dataSeries);
+        var stockChart = new CanvasJS.StockChart("stockChartContainer", {
+        exportEnabled: true,
+        animationEnabled: true,
+        // exportEnabled: true,
+    title: {
+      text:myObj.value +"  "+year+"/"+month+ "歷史股價"
+    },
+    charts: [{
+      
+      axisX: {  
+        viewportMinimum: 1,
+        title: "Days",
+        crosshair: { 
+          enabled: true,
+          snapToDataPoint: true,
+        }
+      },
+      axisY: {
+        title: "Dollars",
+        prefix: "$",
+        crosshair: {
+          enabled: true,
+          //snapToDataPoint: true,
+        }
+      },
+      data: [{
+        type: "line",
+        yValueFormatString: "$#,###.##",
+        dataPoints : dataPoints
+      }]
+    }],
+    data:data,
+    rangeSelector: {
+        inputFields: {
+          startValue: 1,
+          endValue: 20,
+          valueFormatString: "###0"
+        },
+        
+        buttons: [{
+          label: "a week",        
+          range: 5,
+          rangeType: "number"
+        },
+        {
+        label: "All month",        
+        rangeType: "all"
+      }]
+      }
+  });
 
+    stockChart.render();
+  
+}
+      </script>
 	</body>
 </html>
