@@ -63,7 +63,7 @@
                     <!-- 股價圖-->
                     <!--button type="button" onclick="dooutput()">確認</button-->
                     <center><h2 >歷史股價</h2></center>
-                    <center><input type="month" id="start" value="2019-06" min="2009-12" max="2019-11"  style = "height: 46px; background-color:rgb(47,70,110);" ><input type="month" id="end" value="2019-06" min="2009-12" max="2019-11"  style = "height: 46px; background-color:rgb(47,70,110);" ><button onclick="getcsv()">確認</button></center>
+                    <center><input type="month" id="start" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><input type="month" id="end" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><button onclick="getcsv()">確認</button></center>
                     <center><div id="stockChartContainer" style="height: 400px; width: 80%;"></div></center>
                     
                     <!-- 股價表-->
@@ -332,19 +332,18 @@
 		<!-- Scripts -->
     
       <script type="text/javascript">
-         var company = [],tmp = [],r = [];
-          for(var j =0;j<30;j++){
+         var company = [],tmp = [],m = [];
+         for(var j =0;j<30;j++){
             tmp[j] = [];
             company[j] = [];
-            r[j] = 0;
           }
-          var syear;
-          var smonth;
-          var eyear;
-          var emonth,index = 0,sum;
+          var syear,smonth,eyear,emonth,mindex = 0,index;
           function getcsv(myObj){
             index = 0;
-            sum = 0;
+            for(var j =0;j<30;j++){
+              tmp[j] = [];
+              company[j] = [];
+            }
             var start = document.getElementById("start");
             //console.log(start.value.split('-'));
             var tempm = start.value.split('-');
@@ -364,7 +363,7 @@
                 else
                 var filename = "M2M/train_"+String(eyear)+"_"+String(emonth)+"("+String(syear)+" Q1).csv";
                 getdata(filename,company);
-                ;
+                
                 }
               else if(emonth > smonth){
                 count = emonth - smonth+1;
@@ -417,11 +416,14 @@
             //getdata(filename,company);
         }
         async function getdata(filename,tmp){
-          var k=0;
+          var k=0,c=0;
           const response = await fetch(filename);
           const data = await response.text();
           //console.log(data);
           const rows = data.split('\n');
+          rows.forEach(elt => {
+            c++;
+          })
           rows.forEach(elt => {
             const row = elt.split(',');
             //console.log(row);
@@ -431,13 +433,21 @@
                 company[j][i] = parseFloat(company[j][i]);
             }*/
             for(var j=0; j<30; j++){
-              tmp[j][index]=row[j];
-              if(k != 0){
+              //if(j == 0 && k == )
+              if((c - k) == 1)
+                break;
+              else if(k != 0 ){
+                company[j][index-1] = parseFloat(row[j]);
+                //tmp[j][index-1]=row[j];
+                //console.log(row[j]);
+                //console.log(c);
+                //console.log(index);
                 //console.log(k);
-                //console.log(tmp[j][index])
-                company[j][index] = parseFloat(tmp[j][index]); 
-                console.log(company[0][index]);
+                //console.log(tmp[j][index]); 
+                //console.log(company[j][index]);
               }
+              else{}
+                //console.log(row[j]);
               //console.log(tmp[0])
               //console.log(company[0]);
         }
@@ -445,17 +455,46 @@
           index++;
         })
         index -= 2;
-        
         }
         function dooutput(myObj){
-        console.log(company[0]);
+          console.log(company[0]);
         var dataPoints = [];
-        var y = 0;
-        var data = []; var dataSeries = { type: "spline" };
+        var y = 0,count = 0;
+        var data = [];var dataSeries = { type: "spline" };
         var dataPoints = [];
         var tmp = parseInt(myObj.id);
-        for(var j = 0;j < company[0].length-1;j++)
-            dataPoints.push({x: j,y:company[tmp][j]});
+        var start = document.getElementById("start");
+        var tempm = start.value.split('-');
+        syear = parseInt(tempm[0]);
+        smonth = parseInt(tempm[1])-1;
+        var end = document.getElementById("end");
+        tempm = end.value.split('-');
+        eyear = parseInt(tempm[0]);
+        emonth = parseInt(tempm[1]); 
+        for(var j = 0;j < company[0].length-1;j++){
+              //dataPoints.push({x: j,y:company[tmp][j]});
+          //console.log(j);
+          if(count < 20){
+            count ++;
+            dataPoints.push({x: new Date(syear,smonth,count),y:company[tmp][j]});
+          }
+          else{
+            if(smonth == 12){
+              dataPoints.push({x: new Date(syear,smonth,count),y:company[tmp][j]});
+              syear ++;
+              smonth = 1;
+              count = 0;
+            }
+            else{
+            dataPoints.push({x: new Date(syear,smonth,count),y:company[tmp][j]});
+            count = 0;
+            smonth++;
+            }
+          }
+        }
+        tempm = start.value.split('-');
+        syear = parseInt(tempm[0]);
+        smonth = parseInt(tempm[1])-1;
         dataSeries.dataPoints = dataPoints;
         data.push(dataSeries);
         var stockChart = new CanvasJS.StockChart("stockChartContainer", {
@@ -467,9 +506,9 @@
     },
     charts: [{
       axisX: {  
-        viewportMinimum: 1,
-        minimum: 1,
-        title: "Days",
+        viewportMinimum: 0,
+        minimum:0,
+        title: "Date",
         crosshair: { 
           enabled: true,
           snapToDataPoint: true,
@@ -491,29 +530,37 @@
       }]
     }],
     data:data,
+    navigator: {
+      slider: {
+        minimum: new Date(syear, smonth, 01),
+        maximum: new Date(eyear, emonth, 20)
+      }
+    }
+  ,
     rangeSelector: {
         enabled:true,
         inputFields: {
-          startValue: 1,
-          endValue: 20,
-          valueFormatString: "###0"
+          viewportMinimum: 1,
+          minimum:1,
+          //endValue: 20,
+          valueFormatString: 	"MM-DD-YYYY"
         },
         buttons: [{
           label: "a week",        
-          range: 5,
-          rangeType: "number"
+          range: 1,
+          rangeType: "week"
         },{
           label: "a month",        
-          range: 20,
-          rangeType: "number"
+          range: 1,
+          rangeType: "month"
         },{
           label: "a season",        
-          range: 60,
-          rangeType: "number"
+          range: 3,
+          rangeType: "month"
         },{
           label: "a year",        
-          range: 250,
-          rangeType: "number"
+          range: 1,
+          rangeType: "year"
         },
         {
         label: "All ",        
