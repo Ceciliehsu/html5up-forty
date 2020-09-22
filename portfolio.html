@@ -7,39 +7,32 @@
 	<title>Document</title>
 </head>
 <body>
-	<div style="width:400px;">
-		<canvas id="heyChart"></canvas>
-	  </div>
-	  <script>
-		var ctx = document.getElementById("heyChart");
-		var a=["王大毛", "孫小毛", "小甜甜", "許唇美", "豬哥亮"];
-		var myChart = new Chart(ctx, {
-		  type: 'line',
-		  data: {
-			labels: a,
-			datasets: [{
-			  label: '十月：銷售業績',
-			  data: [4, 1, 3, 7, 2],
-			  backgroundColor: [
-				'rgba(54, 162, 235, 0.2)',
-			  ],
-			  borderColor: [
-				'rgba(54, 162, 235, 1)',
-			  ],
-			  borderWidth: 1
-			}]
-		  },
-		  options: {
-			scales: {
-			  yAxes: [{
-				ticks: {
-				  beginAtZero:false,
-				}
-			  }]
-			}
-		  }
-		});
-	  </script>
+	<div class="tabs">
+		  <ul>
+			<li><a href="#tab-1" class="active">頁籤 1</a></li>
+			<li><a href="#tab-2">頁籤 2</a></li>
+			<li<span><span class="attribute-name"> class</span>="<a class="attribute-value">pull-right</a>"</span>><a href="#tab-3">頁籤 3</a></li>
+		  </ul>
+		  <div id="tab-1" class="active">
+			<h1>頁籤 1</h1>
+			<p>這是一般的段落文字，總之愛怎麼搞就怎麼搞。</p>
+		  </div>
+		  <div id="tab-2">
+			<h1>頁籤 2</h1>
+			<ul>
+			  <li>這是無序清單。</li>
+			  <li>項目要幾項隨便您～</li>
+			</ul>
+		  </div>
+		  <div id="tab-3">
+			<h1>頁籤 3</h1>
+			<dl>
+			  <dt>這是自定義列表</dt>
+			  <dd>不算很常用，也是清單的一種，只是沒有數字或符號。</dd>
+			</dl>
+		  </div>
+		</div>
+		
 	  
 </body>
 </html>

@@ -58,14 +58,15 @@
 						</div>
 					</section>
 
-				<!-- Main -->
-                <div >
-                    <!-- 股價圖-->
-                    <!--button type="button" onclick="dooutput()">確認</button-->
-                    <center><h2 >歷史股價</h2></center>
-                    <center><input type="month" id="start" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><input type="month" id="end" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><button onclick="getcsv()">確認</button></center>
-                    <center><div id="stockChartContainer" style="height: 400px; width: 80%;"></div></center>
-                    
+        <!-- Main -->
+        <!-- 頁籤 -->
+        <div id="tab-demo">
+          <ul class="tab-title">
+              <li><a href="#tab01">今日股價</a></li>
+              <li><a href="#tab02">歷史股價</a></li>
+              <li><a href="#tab03">指數</a></li>
+          </ul>
+          <div id="tab01" class="tab-inner">
                     <!-- 股價表-->
                     <center><table id="fruit_table" style="height: 150px; width: 70%;">     
                          <colgroup>
@@ -327,21 +328,63 @@
                          </tbody>
                        </table></center>
                     </div>
+          <div id="tab02" class="tab-inner"> 
+             <!-- 股價圖-->
+                    <!--button type="button" onclick="dooutput()">確認 onchange="dooutput(this)"</button-->
+                    <center><h2 >歷史股價</h2></center>
+                    <center><input type="month" id="start" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><input type="month" id="end" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><button onclick="getcsv();" >確認</button></center>
+                    <center><select name="select" id="selectTest" onclick=" dooutput();">
+                      <option>請選擇公司</option>
+                      <option value="0" id="AAPL" >AAPL</option>
+                      <option value="1" id="AXP">AXP</option>
+                      <option value="2" id="BA">BA</option>
+                      <option value="3" id="CAT">CAT</option>
+                      <option value="4" id="CSCO">CSCO</option>
+                      <option value="5" id="CVX">CVX</option>
+                      <option value="6" id="DIS">DIS</option>
+                      <option value="7" id="DD">DD</option>
+                      <option value="8" id="GS">GS</option>
+                      <option value="9" id="HD">HD</option>
+                      <option value="10" id="IBM">IBM</option>
+                      <option value="11" id="INTC">INTC</option>
+                      <option value="12" id="JNJ">JNJ</option>
+                      <option value="13" id="KO">KO</option>
+                      <option value="14" id="MCD">MCD</option>
+                      <option value="15" id="MMM">MMM</option>
+                      <option value="16" id="MRK">MRK</option>
+                      <option value="17" id="MSFT">MSFT</option>
+                      <option value="18" id="NKE">NKE</option>
+                      <option value="19" id="PFE">PFE</option>
+                      <option value="20" id="PG">PG</option>
+                      <option value="21" id="TRV">TRV</option>
+                      <option value="22" id="UNH">UNH</option>
+                      <option value="23" id="UTX">UTX</option>
+                      <option value="24" id="V">V</option>
+                      <option value="25" id="VZ">VZ</option>
+                      <option value="26" id="BA">BA</option>
+                      <option value="27" id="WBA">WBA</option>
+                      <option value="28" id="WMT">WMT</option>
+                      <option value="29" id="XOM">XOM</option>
+                  </select></center>
+                  <center><div id="stockChartContainer" style="height: 400px; width: 80%;"></div></center>
+          </div>
+          <div id="tab03" class="tab-inner"> 
+          </div>
+        </div>
 			</div>
 
 		<!-- Scripts -->
     
       <script type="text/javascript">
-         var company = [],tmp = [],m = [];
+         var company = [],m = [],date = [];
          for(var j =0;j<30;j++){
-            tmp[j] = [];
             company[j] = [];
           }
           var syear,smonth,eyear,emonth,mindex = 0,index;
-          function getcsv(myObj){
+          function getcsv(){
             index = 0;
+            date.length = 0;
             for(var j =0;j<30;j++){
-              tmp[j] = [];
               company[j] = [];
             }
             var start = document.getElementById("start");
@@ -362,7 +405,7 @@
                   var filename = "M2M/train_"+String(eyear)+"_0"+String(emonth)+"("+String(syear)+" Q1).csv";
                 else
                 var filename = "M2M/train_"+String(eyear)+"_"+String(emonth)+"("+String(syear)+" Q1).csv";
-                getdata(filename,company);
+                getdata(filename);
                 
                 }
               else if(emonth > smonth){
@@ -374,7 +417,8 @@
                   var filename = "M2M/train_"+String(year)+"_0"+String(month)+"("+String(year)+" Q1).csv";
                 else
                   var filename = "M2M/train_"+String(year)+"_"+String(month)+"("+String(year)+" Q1).csv";
-                getdata(filename,tmp);
+                
+                getdata(filename);
                 month++ ;
               }
               }
@@ -400,7 +444,7 @@
                   var filename = "M2M/train_"+String(year)+"_0"+String(month)+"("+String(year)+" Q1).csv";
                 else
                   var filename = "M2M/train_"+String(year)+"_"+String(month)+"("+String(year)+" Q1).csv";
-                getdata(filename,company);
+                getdata(filename);
                 if(month == 12){
                   month = 1;
                   year += 1;
@@ -412,18 +456,18 @@
             else{
               alert("請輸入正確日期");
             }
+           // dooutput();
            // var filename = "M2M/train_"+year+"_"+month+"("+year+" Q1).csv";
             //getdata(filename,company);
         }
-        async function getdata(filename,tmp){
+        async function getdata(filename){
           var k=0,c=0;
+          console.log(filename);
           const response = await fetch(filename);
           const data = await response.text();
           //console.log(data);
           const rows = data.split('\n');
-          rows.forEach(elt => {
-            c++;
-          })
+          c = rows.length;
           rows.forEach(elt => {
             const row = elt.split(',');
             //console.log(row);
@@ -432,12 +476,17 @@
               if(i > 0)
                 company[j][i] = parseFloat(company[j][i]);
             }*/
-            for(var j=0; j<30; j++){
+            for(var j=0; j<31; j++){
               //if(j == 0 && k == )
               if((c - k) == 1)
                 break;
-              else if(k != 0 ){
-                company[j][index-1] = parseFloat(row[j]);
+              if(k != 0 ){
+                if(j != 0)
+                  company[j-1][index-1] = parseFloat(row[j]);
+                else{
+                  date.push(row[j]);
+                  console.log(row[j]);
+                  }
                 //tmp[j][index-1]=row[j];
                 //console.log(row[j]);
                 //console.log(c);
@@ -446,55 +495,39 @@
                 //console.log(tmp[j][index]); 
                 //console.log(company[j][index]);
               }
-              else{}
+              else{
+              }
                 //console.log(row[j]);
               //console.log(tmp[0])
               //console.log(company[0]);
         }
           k++; 
-          index++;
+          index++;  
         })
         index -= 2;
         }
-        function dooutput(myObj){
-          console.log(company[0]);
+        function dooutput(){
+          var myObj = document.getElementById("selectTest");
+          var newdate = [];
+          newdate.length = 0;
+          //console.log(company[0]);
+          //console.log(date);
+          for(var i=0;i<date.length;i++){
+            newdate.push(date[i].split("/"));
+          }
         var dataPoints = [];
-        var y = 0,count = 0;
+        var y = 0,count = 0,dateindex = 0;
         var data = [];var dataSeries = { type: "spline" };
-        var dataPoints = [];
-        var tmp = parseInt(myObj.id);
-        var start = document.getElementById("start");
-        var tempm = start.value.split('-');
-        syear = parseInt(tempm[0]);
-        smonth = parseInt(tempm[1])-1;
-        var end = document.getElementById("end");
-        tempm = end.value.split('-');
-        eyear = parseInt(tempm[0]);
-        emonth = parseInt(tempm[1]); 
-        for(var j = 0;j < company[0].length-1;j++){
-              //dataPoints.push({x: j,y:company[tmp][j]});
-          //console.log(j);
-          if(count < 20){
-            count ++;
-            dataPoints.push({x: new Date(syear,smonth,count),y:company[tmp][j]});
-          }
-          else{
-            if(smonth == 12){
-              dataPoints.push({x: new Date(syear,smonth,count),y:company[tmp][j]});
-              syear ++;
-              smonth = 1;
-              count = 0;
-            }
-            else{
-            dataPoints.push({x: new Date(syear,smonth,count),y:company[tmp][j]});
-            count = 0;
-            smonth++;
-            }
-          }
+        var tmp = parseInt(myObj.value);
+        //console.log(company[0].length-1); 
+        for(var j = 0;j < company[0].length;j++){
+          //console.log(newdate[dateindex][0]);
+          //console.log(newdate[dateindex][1]);
+          //console.log(newdate[dateindex][2]);
+          dataPoints.push({x: new Date(newdate[dateindex][0]+"-"+newdate[dateindex][1]+"-"+newdate[dateindex++][2]),y:company[tmp][j]});
         }
-        tempm = start.value.split('-');
-        syear = parseInt(tempm[0]);
-        smonth = parseInt(tempm[1])-1;
+        //parseInt(newdate[dateindex][0]),parseInt(newdate[dateindex][1]),parseInt(newdate[dateindex++][2])
+       // console.log(dataPoints);
         dataSeries.dataPoints = dataPoints;
         data.push(dataSeries);
         var stockChart = new CanvasJS.StockChart("stockChartContainer", {
@@ -502,7 +535,7 @@
         animationEnabled: true,
         // exportEnabled: true,
     title: {
-      text:myObj.value +"  歷史股價"
+      text:"  歷史股價"
     },
     charts: [{
       axisX: {  
@@ -570,8 +603,19 @@
   });
     stockChart.render();
 }
+      </script> 
+      <!-- 頁籤Scripts -->
+      <script> 
+      $(function(){
+    var $li = $('ul.tab-title li');
+        $($li. eq(0) .addClass('active').find('a').attr('href')).siblings('.tab-inner').hide();
+    
+        $li.click(function(){
+            $($(this).find('a'). attr ('href')).show().siblings ('.tab-inner').hide();
+            $(this).addClass('active'). siblings ('.active').removeClass('active');
+        });
+    });
       </script>
-     
       <script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/jquery.scrolly.min.js"></script>
 			<script src="assets/js/jquery.scrollex.min.js"></script>
