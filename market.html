@@ -6,279 +6,7 @@
 -->
 <html>
 	<head>
-    <script>src="https://d3js.org/d3.v3.min.js"</script>
-    <script type="text/javascript">
-      var company = [],m = [],date = [],file = [];
- 
-      for(var j =0;j<30;j++){
-         company[j] = [];
-       }
-       var syear,smonth,eyear,emonth,mindex = 0,index;
-       function getcsv(){
-         file.length = 0;
-         index = 0;
-         date.length = 0;
-         for(var j =0;j<30;j++){
-           company[j] = [];
-         }
-         var start = document.getElementById("start");
-         //console.log(start.value.split('-'));
-         var tempm = start.value.split('-');
-         syear = parseInt(tempm[0]);
-         smonth = parseInt(tempm[1]);
-         var end = document.getElementById("end");
-         //console.log(end.value.split('-'));
-         tempm = end.value.split('-');
-         eyear = parseInt(tempm[0]);
-         emonth = parseInt(tempm[1]); 
-         var i,j = 0,count = 0,year = 0,month = 0;
-         if(eyear == syear ){
-           index = 0;
-           if(emonth == smonth){
-             if( emonth <10)
-               var filename = "M2M/train_"+String(eyear)+"_0"+String(emonth)+"("+String(syear)+" Q1).csv";
-             else
-             var filename = "M2M/train_"+String(eyear)+"_"+String(emonth)+"("+String(syear)+" Q1).csv";
-             
-             file.push(filename);
-             }
-           else if(emonth > smonth){
-             count = emonth - smonth+1;
-             month = smonth;
-             year = syear ;
-             for(i = 0;i < count ;i ++){
-             if(month <10)
-               var filename = "M2M/train_"+String(year)+"_0"+String(month)+"("+String(year)+" Q1).csv";
-             else
-               var filename = "M2M/train_"+String(year)+"_"+String(month)+"("+String(year)+" Q1).csv";
-             file.push(filename);
-             month++ ;
-           }
-           }
-           else
-             alert("請輸入正確日期");
-           }
-         else if(eyear > syear){
-           index = 0;
-           if(emonth > smonth){
-             count = eyear - syear-1;
-             count *= 12;
-             count += 12 + emonth - smonth + 1;
-           }
-           else if (emonth <= smonth){
-             count = eyear - syear ;
-             count *= 12;
-             count += emonth - smonth+1;
-         }
-           month = smonth;
-           year = syear;
-           for(i = 0;i < count ;i ++){
-             if(month <10)
-               var filename = "M2M/train_"+String(year)+"_0"+String(month)+"("+String(year)+" Q1).csv";
-             else
-               var filename = "M2M/train_"+String(year)+"_"+String(month)+"("+String(year)+" Q1).csv";
-             
-             file.push(filename);
-             if(month == 12){
-               month = 1;
-               year += 1;
-               }
-             else  
-               month++ ;
-           }
-         }
-         else{
-           alert("請輸入正確日期");
-         }
-        // dooutput();
-        // var filename = "M2M/train_"+year+"_"+month+"("+year+" Q1).csv";
-         //getdata(filename,company);
-         getdata(file,0);
-     }
-     function getdata(filename,tmp){
-       d3.csv(filename[tmp], function(data){
-           for(var i = 0;i < data[0].length;i++){
-             date.push(data[i].Date);
-             for(var x in data[0]){
-               company[j][i] = parseInt(data[i].x);
-             }
-           }
-         getdata(filename,++tmp);
-       });
-       /*var k=0,c=0;
-       console.log(filename);
-       const response = await fetch(filename);
-       const data = await response.text();
-       //console.log(data);
-       const rows =  data.split('\n');
-       c = rows.length;
-       rows.forEach(elt => {
-         const row = elt.split(',');
-         //console.log(row);
-         /*for(var j=0; j<30; j++){
-           company[j][i]=row[j];
-           if(i > 0)
-             company[j][i] = parseFloat(company[j][i]);
-         }*/
-         /*console.log(row[0]);
-         for(var j=0; j<31; j++){
-           
-           //if(j == 0 && k == )
-           if((c - k) == 1)
-             break;
-           if(k != 0 ){
-             if(j != 0)
-               company[j-1][index-1] = parseFloat(row[j]);
-             else{
-               date.push(row[j]);
-               
-               }
-             //tmp[j][index-1]=row[j];
-             //console.log(row[j]);
-             //console.log(c);
-             //console.log(index);
-             //console.log(k);
-             //console.log(tmp[j][index]); 
-             //console.log(company[j][index]);
-           }
-           else{
-           }
-             //console.log(row[j]);
-           //console.log(tmp[0])
-           //console.log(company[0]);
-     }
-       k++; 
-       index++;  
-     })
-     index -= 2;*/
-     }
-     function dooutput(){
-       var myObj = document.getElementById("selectTest");
-       var newdate = [];
-       newdate.length = 0;
-       //console.log(company[0]);
-       //console.log(date);
-       for(var i=0;i<date.length;i++){
-         newdate.push(date[i].split("/"));
-       }
-     var dataPoints = [];
-     var y = 0,count = 0,dateindex = 0;
-     var data = [];var dataSeries = { type: "spline" };
-     var tmp = parseInt(myObj.value);
-     //console.log(company[0].length-1); 
-     for(var j = 0;j < company[0].length;j++){
-       //console.log(newdate[dateindex][0]);
-       //console.log(newdate[dateindex][1]);
-       //console.log(newdate[dateindex][2]);
-       dataPoints.push({x: new Date(newdate[dateindex][0]+"-"+newdate[dateindex][1]+"-"+newdate[dateindex++][2]),y:company[tmp][j]});
-     }
-     //parseInt(newdate[dateindex][0]),parseInt(newdate[dateindex][1]),parseInt(newdate[dateindex++][2])
-    // console.log(dataPoints);
-     dataSeries.dataPoints = dataPoints;
-     data.push(dataSeries);
-     var stockChart = new CanvasJS.StockChart("stockChartContainer", {
-     exportEnabled: true,
-     animationEnabled: true,
-     // exportEnabled: true,
- title: {
-   text:"  歷史股價"
- },
- charts: [{
-   axisX: {  
-     viewportMinimum: 0,
-     minimum:0,
-     title: "Date",
-     crosshair: { 
-       enabled: true,
-       snapToDataPoint: true,
-     }
-   },
-   axisY: {
-     //viewportMinimum: 1,
-     title: "Dollars",
-     prefix: "$",
-     crosshair: {
-       enabled: true,
-       //snapToDataPoint: true,
-     }
-   },
-   data: [{
-     type: "line",
-     yValueFormatString: "$#,###.##",
-     dataPoints : dataPoints
-   }]
- }],
- data:data,
- navigator: {
-   slider: {
-     minimum: new Date(syear, smonth, 01),
-     maximum: new Date(eyear, emonth, 20)
-   }
- }
-,
- rangeSelector: {
-     enabled:true,
-     inputFields: {
-       viewportMinimum: 1,
-       minimum:1,
-       //endValue: 20,
-       valueFormatString: 	"MM-DD-YYYY"
-     },
-     buttons: [{
-       label: "a week",        
-       range: 1,
-       rangeType: "week"
-     },{
-       label: "a month",        
-       range: 1,
-       rangeType: "month"
-     },{
-       label: "a season",        
-       range: 3,
-       rangeType: "month"
-     },{
-       label: "a year",        
-       range: 1,
-       rangeType: "year"
-     },
-     {
-     label: "All ",        
-     rangeType: "all"
-   }]
-   }
-});
- stockChart.render();
-}
-function indice() {
-var chart = new CanvasJS.Chart("chartContainer2", {
-animationEnabled: true,
-theme: "light2",
-title:{
- text: "Simple Line Chart"
-},
-data: [{        
- type: "line",
-     indexLabelFontSize: 16,
- dataPoints: [
-   { y: 450 },
-   { y: 414},
-   { y: 520, indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },
-   { y: 460 },
-   { y: 450 },
-   { y: 500 },
-   { y: 480 },
-   { y: 480 },
-   { y: 410 , indexLabel: "\u2193 lowest",markerColor: "DarkSlateGrey", markerType: "cross" },
-   { y: 500 },
-   { y: 480 },
-   { y: 510 }
- ]
-}]
-});
-chart.render();
-
-}
-   </script> 
+    <script src="https://d3js.org/d3.v3.min.js"></script>
 		<title>MARKET</title>
     <meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -684,13 +412,14 @@ chart.render();
     
     
       <script type="text/javascript">
-         var company = [],m = [],date = [],file = [];
+         var company = [],m = [],date = [],file = [],con = 0;
     
          for(var j =0;j<30;j++){
             company[j] = [];
           }
-          var syear,smonth,eyear,emonth,mindex = 0,index;
+          var syear,smonth,eyear,emonth,mindex = 0,index = 0,count;
           function getcsv(){
+            con = 0;
             file.length = 0;
             index = 0;
             date.length = 0;
@@ -707,7 +436,8 @@ chart.render();
             tempm = end.value.split('-');
             eyear = parseInt(tempm[0]);
             emonth = parseInt(tempm[1]); 
-            var i,j = 0,count = 0,year = 0,month = 0;
+            var i,j = 0,year = 0,month = 0;
+            count = 0;
             if(eyear == syear ){
               index = 0;
               if(emonth == smonth){
@@ -715,7 +445,7 @@ chart.render();
                   var filename = "M2M/train_"+String(eyear)+"_0"+String(emonth)+"("+String(syear)+" Q1).csv";
                 else
                 var filename = "M2M/train_"+String(eyear)+"_"+String(emonth)+"("+String(syear)+" Q1).csv";
-                
+                count  = 1;
                 file.push(filename);
                 }
               else if(emonth > smonth){
@@ -772,11 +502,18 @@ chart.render();
             getdata(file,0);
         }
         function getdata(filename,tmp){
+          var j = 0;
+          if(tmp < count)
           d3.csv(filename[tmp], function(data){
-              for(var i = 0;i < data[0].length;i++){
+              for(var i = 0;i < data.length;i++){
                 date.push(data[i].Date);
+                j = 0;
                 for(var x in data[0]){
-                  company[j][i] = parseInt(data[i].x);
+                  if(j>0 && j < 31 ){
+                    console.log(x);
+                    company[j-1][index++] = parseInt(data[i][x]);
+                  }
+                  j++
                 }
               }
             getdata(filename,++tmp);
