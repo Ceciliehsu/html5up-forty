@@ -7,6 +7,7 @@
 <html>
 	<head>
     <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 		<title>MARKET</title>
     <meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -63,9 +64,9 @@
         <!-- 頁籤 -->
         <div id="tab-demo">
           <ul class="tab-title">
-              <li><a href="#tab01">今日股價</a></li>
-              <li><a href="#tab02">歷史股價</a></li>
-              <li><a href="#tab03">指數</a></li>
+              <li><a href="#tab01" style="font-weight:bold;">TODAY</a></li>
+              <li><a href="#tab02" style="font-weight:bold;">HISTORY</a></li>
+              <li><a href="#tab03" style="font-weight:bold;">INDICES</a></li>
           </ul>
           <div id="tab01" class="tab-inner">
                     <!-- 股價表-->
@@ -333,8 +334,8 @@
              <!-- 股價圖-->
                     <!--button type="button" onclick="dooutput()">確認 onchange="dooutput(this)"</button-->
                     <center><h2 >歷史股價</h2></center>
-                    <center><input type="month" id="start" value="2019-06" min="2009-12" max="2019-11"  style = "height: 46px; " ><input type="month" id="end" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><button onclick="getcsv();" >確認</button></center>
-                    <center><select name="select" id="selectTest" onclick=" dooutput();">
+                    <center><input type="month" id="start" value="2015-06" min="2009-12" max="2019-11"  style = "height: 46px;  " ><input type="month" id="end" value="2019-11" min="2009-12" max="2019-11"  style = "height: 46px; " ><button onclick="getcsv();" >確認</button></center>
+                    <center><select name="select" id="selectTest" onclick="dooutput()">
                       <option>請選擇公司</option>
                       <option value="0" id="AAPL" >AAPL</option>
                       <option value="1" id="AXP">AXP</option>
@@ -376,34 +377,30 @@
                             <col span="5" style="background:rgb(7, 0, 0)">
                           </colgroup>
                         <h2 >指數</h2>
+                        
                          <tbody>
                            <tr>
-                             <td headers="fruit_name" style="font-weight:bold; "> <input type="button" id="0" name="mybutton" value="DOW30" mouseover="indice()" ></td>
+                             <td headers="fruit_name" style="font-weight:bold; "> <input type="button" id="0" name="mybutton" value="DOW30"  onclick="indicechart(this)"></td>
                              <td headers="fruit_price">27,194.23</td>
                              <td headers="fruit_price" style="color: green;">+0.17%</td>
-                             <td id="chartContainer2" style="height: 50px; width: 100px;"></td>
                            </tr>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="S&P"  ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="S&P" onclick="indicechart(this)" ></td>
                             <td headers="fruit_price">3,295.29</td>
                             <td headers="fruit_price" style="color: green;">+0.43%</td>
-                            <td id="chartContainer2" style="height: 50px; width: 100px;"></td>
                            </tr>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="Nasdaq"  ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="NASDAQ" onclick="indicechart(this)"  ></td>
                             <td headers="fruit_price">10,828.58</td>
                             <td headers="fruit_price" style="color: green;">+0.46%</td>
-                            <td id="chartContainer2" style="height: 50px; width: 100px;"></td>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="Russell 2000"  ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="RUSSEL2000" onclick="indicechart(this)" ></td>
                              <td headers="fruit_price">1,484.19</td>
                              <td headers="fruit_price" style="color: green;">+0.47%</td>
-                             <td id="chartContainer2" style="height: 50px; width: 100px;"></td>
                           </tr>
                         </tbody>
                       </table></center>
-                     
-                      
+                      <center><div id="chartContainer2"style="height: 300px; width: 40%;" ></div></center>
           </div>
         </div>
 			</div>
@@ -413,7 +410,7 @@
     
       <script type="text/javascript">
          var company = [],m = [],date = [],file = [];
-    
+         var indice = [],indicedate = [];
          for(var j =0;j<30;j++){
             company[j] = [];
           }
@@ -499,6 +496,7 @@
            // var filename = "M2M/train_"+year+"_"+month+"("+year+" Q1).csv";
             //getdata(filename,company);
             getdata(file,0);
+            //dooutput();
         }
         function getdata(filename,tmp){
           var j = 0;
@@ -531,8 +529,8 @@
           for(var i=0;i<date.length;i++){
             newdate.push(date[i].split("/"));
           }
-        var dataPoints = [];
         var y = 0,count = 0,dateindex = 0;
+        var dataPoints = [];
         var data = [];var dataSeries = { type: "spline" };
         var tmp = parseInt(myObj.value);
         //console.log(company[0].length-1); 
@@ -543,6 +541,7 @@
           //console.log(company[tmp][j]);
           dataPoints.push({x: new Date(newdate[dateindex][0]+"-"+newdate[dateindex][1]+"-"+newdate[dateindex++][2]),y:company[tmp][j]});
         }
+
         //parseInt(newdate[dateindex][0]),parseInt(newdate[dateindex][1]),parseInt(newdate[dateindex++][2])
        // console.log(dataPoints);
         dataSeries.dataPoints = dataPoints;
@@ -620,35 +619,56 @@
   });
     stockChart.render();
 }
-function indice() {
-var chart = new CanvasJS.Chart("chartContainer2", {
-	animationEnabled: true,
-	theme: "light2",
-	title:{
-		text: "Simple Line Chart"
-	},
-	data: [{        
-		type: "line",
-      	indexLabelFontSize: 16,
-		dataPoints: [
-			{ y: 450 },
-			{ y: 414},
-			{ y: 520, indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },
-			{ y: 460 },
-			{ y: 450 },
-			{ y: 500 },
-			{ y: 480 },
-			{ y: 480 },
-			{ y: 410 , indexLabel: "\u2193 lowest",markerColor: "DarkSlateGrey", markerType: "cross" },
-			{ y: 500 },
-			{ y: 480 },
-			{ y: 510 }
-		]
-	}]
-});
-chart.render();
-
+async function getdata2(filename){
+  var i = 0;
+  const response = await fetch(filename);
+  const data = await response.text();
+  //console.log(data);
+  const rows = data.split('\n');
+  indice.length = 0;
+  indicedate.length = 0;
+  rows.forEach(elt => {
+    const row = elt.split(',');
+    //console.log(row);
+    if(i > 0){
+      indice.push(row[4]);
+      indicedate.push(row[0]);
+    }
+    i++
+  })
 }
+function indicechart(myObj) {
+  var filename2 = "csv/"+myObj.value+".csv";
+  //console.log(filename2);
+  getdata2(filename2);
+  var dataPoint = [];
+  //console.log(indicedate.length);
+  //console.log(indicedate[0]);
+  var data = [];var dataSeries = { type: "spline" };
+  for(var i = 0;i < indicedate.length;i++){
+            //console.log("hey");
+            dataPoint.push({x:new Date(indicedate[i]),y:parseInt(indice[i])});
+            }
+    //console.log(dataPoint);
+            dataSeries.dataPoints = dataPoint;
+  data.push(dataSeries);
+  var chart = new CanvasJS.Chart("chartContainer2", {
+    animationEnabled: true, 
+    data:data, 
+    title:{
+      text:myObj.value
+    },
+    data: [{
+      type: "splineArea",
+      color: "rgba(54,158,173,.7)",
+      markerSize: 5,
+      //xValueFormatString: "YYYY",
+     // yValueFormatString: "$#,##0.##",
+     dataPoints: dataPoint
+    }],
+    });
+  chart.render();
+  }
       </script> 
       <!-- 頁籤Scripts -->
       <script> 
@@ -674,7 +694,9 @@ chart.render();
 
 
 
-<script>/*var k=0,c=0;
+<script>/*
+  <td id="chartContainer2" style="height: 50px; width: 100px;"></td>
+var k=0,c=0;
           console.log(filename);
           const response = await fetch(filename);
           const data = await response.text();
@@ -684,7 +706,12 @@ chart.render();
           rows.forEach(elt => {
             const row = elt.split(',');
             //console.log(row);
-            /*for(var j=0; j<30; j++){
+            /*
+            
+            
+ 
+            
+            for(var j=0; j<30; j++){
               company[j][i]=row[j];
               if(i > 0)
                 company[j][i] = parseFloat(company[j][i]);
