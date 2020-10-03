@@ -382,36 +382,36 @@
                         
                          <tbody>
                            <tr>
-                             <td headers="fruit_name" style="font-weight:bold; "> <input type="button" id="0" name="mybutton" value="DOW30"  ></td>
+                             <td headers="fruit_name" style="font-weight:bold; "> <input type="button" id="0" name="mybutton" value="DOW30" onclick="getdata2(this)" ></td>
                              <td headers="fruit_price">27,194.23</td>
                              <td headers="fruit_price" style="color: green;">+0.17%</td>
                            </tr>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="S&P" onclick="indicechart(this)" ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="S&P" onclick="getdata2(this)" ></td>
                             <td headers="fruit_price">3,295.29</td>
                             <td headers="fruit_price" style="color: green;">+0.43%</td>
                            </tr>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="NASDAQ" onclick="indicechart(this)"  ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="NASDAQ" onclick="getdata2(this)"  ></td>
                             <td headers="fruit_price">10,828.58</td>
                             <td headers="fruit_price" style="color: green;">+0.46%</td>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="RUSSEL2000" onclick="indicechart(this)" ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="RUSSEL2000" onclick="getdata2(this)" ></td>
                              <td headers="fruit_price">1,484.19</td>
                              <td headers="fruit_price" style="color: green;">+0.47%</td>
                           </tr>
                           <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="NYA" onclick="indicechart(this)"  ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="NYA" onclick="getdata2(this)"  ></td>
                             <td headers="fruit_price">12749.79</td>
                             <td headers="fruit_price" style="color: green;">+0.46%</td>
                            <tr>
-                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="SOX" onclick="indicechart(this)" ></td>
+                            <td headers="fruit_name" style="font-weight:bold;"><input type="button" id="0" name="mybutton" value="SOX" onclick="getdata2(this)" ></td>
                              <td headers="fruit_price">2221.120117</td>
                              <td headers="fruit_price" style="color: green;">+0.47%</td>
                           </tr>
                         </tbody>
                       </table></center>
-                      <center><div id="chartContainer2" style="height: 400px; width: 80%;"></div></center>
+                      <center><div id="chartContainer2" ></div></center>
           </div>
         </div>
 			</div>
@@ -630,8 +630,8 @@
     stockChart.render();
 }
 var indice = [],indicedate = [];
-getdata2("csv/DOW30.csv");
-function getdata2(filename){
+function getdata2(tmp){
+      filename = "csv/"+tmp.value+".csv";
       d3.csv(filename, function(data){
         for(var i = 0; i < data.length;i++){
                 indicedate.push(data[i].Date);
@@ -643,16 +643,15 @@ function getdata2(filename){
   function indicechart() {
     console.log(indice);
     var dataPoint = [];
-    var data = [];var dataSeries = { type: "spline" };
+    var data = [];
+    var dataSeries = { type: "spline" };
     for(var i = 0;i < indicedate.length;i++){
-              dataPoint.push({x:new Date(indicedate[i]),y:parseInt(indice[i])});
-              }
-      //console.log(dataPoint);
-              dataSeries.dataPoints = dataPoint;
+      dataPoint.push({x:new Date(indicedate[i]),y:parseInt(indice[i])});
+    }
+    //console.log(dataPoint);
+    dataSeries.dataPoints = dataPoint;
     data.push(dataSeries);
     var stockChart = new CanvasJS.StockChart("chartContainer2", {
-        width:400,
-        hieght:400,
           exportEnabled: true,
           animationEnabled: true,
           // exportEnabled: true,
@@ -662,6 +661,7 @@ function getdata2(filename){
         axisX: {  
           viewportMinimum: 0,
           minimum:0,
+          labelFontSize:7,
           crosshair: { 
             enabled: true,
             snapToDataPoint: true,
