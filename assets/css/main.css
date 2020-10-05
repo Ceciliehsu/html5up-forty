@@ -3208,7 +3208,9 @@ input, select, textarea {
 			#header .logo:active strong {
 				background-color: #53e3fb;
 			}
-
+.indicechart{
+	display: inline-block;
+}
 		#header nav {
 			display: -moz-flex;
 			display: -webkit-flex;
@@ -3421,7 +3423,9 @@ input, select, textarea {
 				}
 
 		}
-
+.canvasjs-chart-credit{
+	z-index: -1;
+}
 /* Banner */
 
 	#banner {
@@ -3530,8 +3534,8 @@ input, select, textarea {
 				}
 
 		#banner.major {
-			height: 75vh;
-			min-height: 30em;
+			height: 50vh;
+			min-height: 0em;
 			max-height: 50em;
 		}
 
@@ -3591,7 +3595,7 @@ input, select, textarea {
 
 			#banner {
 				padding: 5em 0 1em 0 ;
-				height: auto;
+				height: 10%;
 				margin-bottom: -2.75em;
 				max-height: none;
 				min-height: 0;
