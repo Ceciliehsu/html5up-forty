@@ -8,11 +8,14 @@ choose = JSON.parse(localStorage.getItem("choose"));
 var dataPoints = [];
 var data = [];
 var dataSeries = { type: "spline" };
+
 for(var i = 0;i < choose.length;i++){
-        var show = document.getElementById("0");
+        var show = document.getElementsByName("aapl");
+        console.log(show);
         show.style.display = "block";
     
 }
+
 /*var tmp = parseInt(myObj.value);
 
 
