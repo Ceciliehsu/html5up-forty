@@ -8,8 +8,13 @@ var images;
 var color2 = d3.scale.category20();
 var nodes = [];
 var force;
-var all_company_name = [];
+var all_company_name = ["AAPL","AXP","BA","CAT","CSCO","CVX","DIS","DD","GS","HD","IBM","INTC","JNJ","JPM","KO","MCD","MMM","MRK","MSFT","NKE","PFE","PG","TRV","UNH","UTX","V","VZ","WBA","WMT","XOM"];
 var ticktimes = 0;
+var data = [];
+//var company = [AAPL,AXP,BA,CAT,CSCO,CVX,DIS,DD,GS,HD,IBM,INTC,JNJ,JPM,KO,MCD,MMM,MRK,MSFT,NKE,PFE,PG,TRV,UNH,UTX,V,VZ,WBA,WMT,XOM]; //股價
+var date = [];
+//if(localStorage.getItem( select_bubble))
+    //select_bubble = JSON.parse(localStorage.getItem( select_bubble));
 function dragstart(d, i) {
             
 }
@@ -219,7 +224,106 @@ function start(){
 }
 console.log(select_bubble);
 window.addEventListener("load", start, false);
+
+var tmpcase = [],number = 0,y = [],Y = [],day,yourtrend,yourm;
+
 function calculate(){
-    console.log("123");
+    number = 0;
+    for(var i = 0;i < 30;i++){
+        tmpcase[i] = 0;
+    }
+    for(var i = 0;i < select_bubble.length;i++){
+        tmpcase[select_bubble[i].idx] = 1;
+        number++;
+    }
+    getdata("csv/data1.csv",0);
+    console.log(data);
+    //console.log(date);
+    localStorage.setItem("select",JSON.stringify(select_bubble));
     window.location.href = 'chart.html';
+}
+
+function getdata(filename, c){
+    var j = 0,tmp  = 0;
+    if(c<1){
+        d3.csv(filename, function(d){
+            day = d.length;
+            for(var i = 0;i < d.length;i++){
+                data[i] = [];
+            }
+             for(var i = 0;i < d.length;i++){
+                 tmp = 0;
+                 j = 0;
+                for(var x in d[0]){
+                    if(j <30){
+                        if(tmp == 0){
+                            date.push(d[i].Date);
+                            tmp++;
+                        }
+                        else{
+                            data[i][j] = parseFloat( d[i][x]);
+                            //console.log(data[i][j]);
+                            j++;
+                        }
+                    }
+                }
+            }
+            yourtrend=parseFloat(trend(number,data,tmpcase));
+            getdata(filename,++c);
+            console.log(yourtrend);
+            console.log(yourm);
+            localStorage.setItem("fund",JSON.stringify(Y));
+            localStorage.setItem("m",toString(yourm));
+            localStorage.setItem("trend",toString(yourtrend));
+            localStorage.setItem("date",JSON.stringify(date));
+            localStorage.setItem("choose",JSON.stringify(tmpcase));
+        });
+    }
+}
+
+function trend(n,data,tmpcase){
+    for(var i = 0;i < data.length+1;i++){
+        Y[i] = 0;
+        y[i] = [];
+    }
+	var init = 10000000,monleft;  //double
+	var tmp = 0,left = [],m=0,risk=0; //double
+    var stock,j,money = parseInt(init/n),r,c,i; //int
+	monleft = parseFloat(init - money*n);
+	for(c = 0;c < 30;c++){
+		if(tmpcase[c] == 1){
+			stock = parseInt(money/data[0][c]);
+            left[c] = parseFloat( money - stock*data[0][c]);
+			y[1][c] = money;
+			for(i = 2;i < day+1;i++){
+                y[i][c] = parseFloat(data[i-1][c]*stock + left[c]);
+			}
+		}
+    }
+	Y[1] = init;
+	for(i=2;i<day+1;i++){
+		for(c = 0;c < 30;c++){
+			if(tmpcase[c] == 1){
+                Y[i] += y[i][c];
+            }
+		}
+ 	}
+	for(i = 1;i < day+1;i++){
+		m += i*Y[i] - i*init;
+		tmp += i*i;
+	}
+
+	m /= tmp;
+	for(i = 1;i < day+1;i++){
+		tmp = m*i+init;
+		risk += Math.pow(Y[i] - tmp,2);
+	}
+	risk /= day;
+    risk = Math.sqrt(risk);
+    console.log(Y);
+    yourm = m;
+	if(m > 0)
+		return m/risk;
+	else
+		return m*risk;
 }
