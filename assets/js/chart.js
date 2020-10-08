@@ -10,10 +10,9 @@ var data = [];
 var dataSeries = { type: "spline" };
 
 for(var i = 0;i < choose.length;i++){
-        var show = document.getElementsByName("aapl");
+        var show = document.getElementsByName("abc");
         console.log(show);
-        show.style.display = "block";
-    
+        show[0].setAttribute("style", "");
 }
 
 /*var tmp = parseInt(myObj.value);
