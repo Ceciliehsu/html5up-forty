@@ -9,11 +9,12 @@ var dataPoints = [];
 var data = [];
 var dataSeries = { type: "spline" };
 
-for(var i = 0;i < choose.length;i++){
+console.log(date);
+/*for(var i = 0;i < choose.length;i++){
         var show = document.getElementsByName("abc");
         console.log(show);
         show[0].setAttribute("style", "");
-}
+}*/
 
 /*var tmp = parseInt(myObj.value);
 
