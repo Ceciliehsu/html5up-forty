@@ -21,7 +21,7 @@ number = localStorage.getItem("number");
 for(var i = 0;i < 30;i++){ 
   if(selection[i] == 1){
     var tmp = document.getElementById(i);
-    tmp.style.display = "block";
+    tmp.style.display = "inline-block";
     }
   }
 

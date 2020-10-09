@@ -1,11 +1,13 @@
-var all_company_name = ["AAPL","AXP","BA","CAT","CSCO","CVX","DIS","DD","GS","HD","IBM","INTC","JNJ","JPM","KO","MCD","MMM","MRK","MSFT","NKE","PFE","PG","TRV","UNH","UTX","V","VZ","WBA","WMT","XOM"];
 var selection = [];
 var number = 0;
+var tmpselection = [];
 
+tmpselection = JSON.parse(localStorage.getItem("selection"));
+console.log(selection);
 for(var i = 0;i < 30;i++){
     selection[i] = 0;
   }
-  
+
 function allowDrop(ev) {
   ev.preventDefault();
   }
