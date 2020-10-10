@@ -37,9 +37,9 @@ function cancel(obj){
   var drain = document.getElementById(obj.id);
   drain.style.display = "none";
   //console.log(selection);
-  var source = document.getElementById(obj.id-30);
-  source.innerHTML = <img src="img/AAPL.png" width="75px" height="75px" draggable="true" ondragstart="drag(event)" id=0>;
-  source.style.display = "inline-block";
+  //var source = document.getElementById(obj.id-30);
+  //source.innerHTML = <img src="img/AAPL.png" width="75px" height="75px" draggable="true" ondragstart="drag(event)" id=0>;
+  //source.style.display = "inline-block";
 }
 
 function dochart(){
