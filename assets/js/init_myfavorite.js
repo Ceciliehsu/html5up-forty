@@ -1,3 +1,4 @@
+var company = ["AAPL","AXP","BA","CAT","CSCO","CVX","DD","DIS","GS","HD","IBM","INTC","JNJ","JPM","KO","MCD","MMM","MRK","MSFT","NKE","PFE","PG","TRV","UNH","UTX","V","VZ","WBA","WMT","XOM"];
 var selection = [];
 var number = 0;
 var tmpselection = [];
@@ -25,9 +26,20 @@ function drop(ev) {
   //console.log(selection);
   //console.log(number);
   ev.target.appendChild(document.getElementById(data));
-  var tmp = document.getElementById(data);
-  tmp.style.display = "none";
+  var source = document.getElementById(data);
+  source.style.display = "none";
+  var drain = document.getElementById(parseInt(data)+30);
+  drain.style.display = "inline-block";
   }
+
+function cancel(obj){
+  selection[obj.id-30] = 0;
+  var drain = document.getElementById(obj.id);
+  drain.style.display = "none";
+  //console.log(selection);
+  var source = document.getElementById(obj.id-30);
+  source.style.display = "inline-block";
+}
 
 function dochart(){
   localStorage.setItem('number',number);
