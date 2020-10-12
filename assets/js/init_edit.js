@@ -2,17 +2,23 @@ var company = ["AAPL","AXP","BA","CAT","CSCO","CVX","DD","DIS","GS","HD","IBM","
 var selection = [];
 var number = 0;
 
+selection = JSON.parse(localStorage.getItem("selection"));
+
+var tmp = document.getElementById('div1');
 for(var i = 0;i < 30;i++){
-  selection[i] = 0;
+    if(selection[i] == 1){
+      tmp.appendChild(document.getElementById(i));
+      number++;
+    }
 }
 
 function allowDrop(ev) {
   ev.preventDefault();
-}
+  }
   
 function drag(ev) {
   ev.dataTransfer.setData("text", ev.target.id);
-}
+  }
   
 function droponD(ev) {
   ev.preventDefault();
@@ -24,7 +30,7 @@ function droponD(ev) {
   source.style.display = "none";*/
   //var drain = document.getElementById(parseInt(data)+30);
   //drain.style.display = "inline-block";
-}
+  }
 
   function droponS(ev) {
     ev.preventDefault();
@@ -32,7 +38,7 @@ function droponD(ev) {
     selection[data] = 0;
     number--;
     ev.target.appendChild(document.getElementById(data));
-  }
+    }
 /*function cancel(obj){
   selection[obj.id-30] = 0;
   var drain = document.getElementById(obj.id);
@@ -47,6 +53,6 @@ function dochart(){
   localStorage.setItem('number',number);
   localStorage.setItem('selection',JSON.stringify(selection));
   window.location.href='favorite_chart.html' ;
-}
+  }
 
   

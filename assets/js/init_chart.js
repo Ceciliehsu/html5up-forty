@@ -12,6 +12,7 @@ var yourm;
 var data = [];
 var date = [];
 var trendary = [];
+var risk = 0;
 
 selection = JSON.parse(localStorage.getItem("selection"));
 console.log(selection);
@@ -62,9 +63,12 @@ function getdata(filename, c){
               realY[k-1] = Y[k];
             }
             getdata(filename,++c);
+            document.getElementById("trend").innerHTML = yourtrend;
+            document.getElementById("risk").innerHTML = risk;
             console.log(yourtrend);
             console.log(Y);
             console.log(realY);
+            console.log(risk);
             drawchart();
         });
     }
@@ -76,8 +80,9 @@ function trend(n,data,tmpcase){
         y[i] = [];
     }
     var init = 10000000,monleft;  //double
-    var tmp = 0,left = [],m=0,risk=0; //double
-      var stock,j,money = parseInt(init/n),r,c,i; //int
+    var tmp = 0,left = [],m=0; //double
+    var stock,j,money = parseInt(init/n),r,c,i; //int
+    risk = 0;
     monleft = parseFloat(init - money*n);
     for(c = 0;c < 30;c++){
       if(tmpcase[c] == 1){
