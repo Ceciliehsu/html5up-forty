@@ -37,21 +37,26 @@
 
     <style>
         #drag_pic{
-          width: 60%;
-          height: 400px;
+          width: 50%;
+          height: 375px;
           padding: 10px;
           border: 0px solid #aaaaaa;
         }
         #div1{
-          width: 500px;
-          height: 400px;
+          width: 700px;
+          height: 350px;
           border: 0px solid #aaaaaa;
         }
         
         .f_HanSans_light{
             background-repeat: no-repeat;
-            background-position: 50% 100%;
-            background-size: 600px 600px;
+            background-position: 50% 500px;
+            background-size: 800px 700px;
+        }
+        #but{
+            position: absolute;
+            top:1200px;
+            left: 785px;
         }
         /*.img_select{
             position: absolute;
@@ -64,7 +69,7 @@
         </style>
 </head>
 
-<body class="f_HanSans_light" background="img/heart.webp">
+<body class="f_HanSans_light" background="img/LOVE.png">
     <noscript>
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NS27F8N" height="0" width="0"
             style="display:none;visibility:hidden"></iframe>
@@ -83,7 +88,7 @@
                             class="menu_item" href="./faq/account/">News</a><a class="menu_item"
                             href="https://becks9908.github.io/myweb/ruby_card.html">Game</a>
                         <a class="menu_item" href="./how/prepare/">Setting</a>
-                        <a class="btn_gold shadow menu_btn_gold" href="login.html" id="name">Login</a>
+                        <a class="btn_gold shadow menu_btn_gold" href="login.html" id="name">Ruby</a>
                     </nav>
                 </div>
             </header>
@@ -131,7 +136,7 @@
             <img src="img/XOM.png" width="75px" height="75px" draggable="true" ondragstart="drag(event)" id=29>
         </div></center>
         <center><div id="div1" ondrop="droponD(event)" ondragover="allowDrop(event)"  ></div></center>
-        <center><input type="button" value="SUBMIT" onclick="dochart()"></center>
+        <center><input id ="but" type="button" value="SUBMIT" onclick="dochart()"></center>
         
     </div>
     <!-- script -->
