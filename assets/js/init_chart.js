@@ -130,7 +130,7 @@ function drawchart(){
             lineTension : 0.4,
             backgroundColor : "#FFD9EC",
             borderColor : "#FF0000",
-            borderWidth : 3,
+            borderWidth : 5,
             fill : "1",
             data: realY
         }, {
@@ -138,7 +138,7 @@ function drawchart(){
           lineTension : 0,
           backgroundColor : "#000000",
           borderColor : "#000000",
-          borderWidth : 1,
+          borderWidth : 2,
           fill : false,
           pointRadius : 0,
           data: trendary
